@@ -58,7 +58,7 @@ public class AdminServiceTest {
 	@Test
 	public void sellTicket_positive() {
 		final AdminService adminService = new AdminService();
-		Places vipPlaces = new NumberedPlaces();
+		Places vipPlaces = new NumberedPlaces(3);
 		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
 		placesMap.put(Category.VIP, vipPlaces);
 		ClubConcertEvent event = new ClubConcertEvent(placesMap);
@@ -90,6 +90,17 @@ public class AdminServiceTest {
 		adminService.sellTicket(event, Category.STANDUP);
 		adminService.sellTicket(event, Category.STANDUP);
 	
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void sellTicketNumberedPlacesSameNumberError() {
+		final AdminService adminService = new AdminService();
+		Places standupPlaces = new NumberedPlaces(3);
+		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
+		placesMap.put(Category.VIP, standupPlaces);
+		ClubConcertEvent event = new ClubConcertEvent(placesMap);
+		adminService.sellTicket(event, Category.VIP, 1);
+		adminService.sellTicket(event, Category.VIP, 1);
 	}
 }
 
