@@ -12,6 +12,8 @@ import java.util.Set;
 import com.epam.handsonxp.obj.ClubEvent;
 import com.epam.handsonxp.obj.Ticket;
 import com.epam.handsonxp.obj.TicketType;
+import com.epam.handsonxp.obj.WrongClubEventException;
+import com.epam.handsonxp.obj.WrongClubTicketException;
 
 public class AdminService {
 	private final List<ClubEvent> clubEvents;
@@ -25,10 +27,10 @@ public class AdminService {
 
 	public void addEvent(ClubEvent event) {
 		if (event.title == null) {
-			throw new RuntimeException("validation error: title must not be null!");
+			throw new WrongClubEventException("validation error: title must not be null!");
 		}
 		if (event.date == null) {
-			throw new RuntimeException("validation error: date must not be null!");
+			throw new WrongClubEventException("validation error: date must not be null!");
 		}
 		Date todayDate = new Date();
 		GregorianCalendar eventCalendar = new GregorianCalendar();
@@ -38,14 +40,14 @@ public class AdminService {
 		todayCalendar.set(GregorianCalendar.HOUR_OF_DAY, eventCalendar.get(GregorianCalendar.HOUR_OF_DAY));
 		todayCalendar.set(GregorianCalendar.MINUTE, eventCalendar.get(GregorianCalendar.MINUTE));
 		if (eventCalendar.compareTo(todayCalendar) == 0) {
-			throw new RuntimeException("validation error: today date is deprecated!");
+			throw new WrongClubEventException("validation error: today date is deprecated!");
 		}
 
 		if (event.artists == null || event.artists.isEmpty()) {
-			throw new RuntimeException("validation error: artists shouldn't be null or empty!");
+			throw new WrongClubEventException("validation error: artists shouldn't be null or empty!");
 		}
 		if (event.prices == null || event.prices.isEmpty()) {
-			throw new RuntimeException("validation error: prices shouldn't be null or empty!");
+			throw new WrongClubEventException("validation error: prices shouldn't be null or empty!");
 		}
 		clubEvents.add(event);
 	}
@@ -57,13 +59,13 @@ public class AdminService {
 	public void sellTicket(ClubEvent clubEvent, TicketType type, int num) {
 		Ticket ticket = new Ticket(clubEvent, type, num);
 		if (ticket.ticketType == TicketType.ENTRY) {
-			throw new RuntimeException("validation error: entry");
+			throw new WrongClubTicketException("validation error: entry");
 		}
 		if (sellTickets.contains(ticket)) {
-			throw new RuntimeException("validation error: alrady buy");
+			throw new WrongClubTicketException("validation error: alrady buy");
 		}
 		if ((num > type.max) && (num <= 0)) {
-			throw new RuntimeException("validation error: this ticket number not exist");
+			throw new WrongClubTicketException("validation error: this ticket number not exist");
 		}
 		
 		
@@ -73,7 +75,7 @@ public class AdminService {
 	public void sellTicket(ClubEvent clubEvent, TicketType type) {
 		Ticket ticket = new Ticket(clubEvent, type, 0);
 		if (ticket.ticketType != TicketType.ENTRY) {
-			throw new RuntimeException("validation error: not Entry");
+			throw new WrongClubTicketException("validation error: not Entry");
 
 		}
 		List<Ticket> l = entryMapList.get(clubEvent);
@@ -83,7 +85,7 @@ public class AdminService {
 		}
 		if (l.size() >= type.max) {
 
-			throw new RuntimeException("validation error: more than " + type.max);
+			throw new WrongClubTicketException("validation error: more than " + type.max);
 
 		}
 		l.add(ticket);

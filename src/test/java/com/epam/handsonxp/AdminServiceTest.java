@@ -8,10 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.epam.handsonxp.obj.ClubEvent;
 import com.epam.handsonxp.obj.TicketType;
+import com.epam.handsonxp.obj.WrongClubEventException;
+import com.epam.handsonxp.obj.WrongClubTicketException;
 
 public class AdminServiceTest {
 
@@ -37,14 +40,14 @@ public class AdminServiceTest {
 		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents().get(0).title);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = WrongClubEventException.class)
 	public void addEvent_validationError() {
 		final AdminService adminService = new AdminService();
 		final ClubEvent clubEvent = new ClubEvent();
 		adminService.addEvent(clubEvent);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = WrongClubEventException.class)
 	public void clubEventDateIsCorrect_dateIsToday() {
 		final AdminService adminService = new AdminService();
 		final ClubEvent clubEvent = new ClubEvent();
@@ -66,7 +69,7 @@ public class AdminServiceTest {
 
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = WrongClubTicketException.class)
 	public void sellTicket_validationVipError() {
 		final AdminService adminService = new AdminService();
 		final ClubEvent clubEvent = new ClubEvent();
@@ -78,8 +81,7 @@ public class AdminServiceTest {
 		Date date = new Date();
 
 		GregorianCalendar calendar = new GregorianCalendar();
-		
-		
+
 		calendar.setTime(date);
 		calendar.add(Calendar.DAY_OF_MONTH, 1);
 		clubEvent.title = "SuperMegaShow 12345";
@@ -93,7 +95,7 @@ public class AdminServiceTest {
 
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = WrongClubTicketException.class)
 	public void sellTicket_validationEntryError() {
 		final AdminService adminService = new AdminService();
 		final ClubEvent clubEvent = new ClubEvent();
@@ -105,7 +107,7 @@ public class AdminServiceTest {
 		Date date = new Date();
 
 		GregorianCalendar calendar = new GregorianCalendar();
-		
+
 		calendar.setTime(date);
 		calendar.add(Calendar.DAY_OF_MONTH, 1);
 		clubEvent.title = "SuperMegaShow 12345";
@@ -114,13 +116,12 @@ public class AdminServiceTest {
 		clubEvent.artists = artists;
 		clubEvent.prices = prices;
 		adminService.addEvent(clubEvent);
-		for (int i = 0; i < 101; i++) {
+		for (int i = 0; i < TicketType.ENTRY.max + 1; i++) {
 			adminService.sellTicket(clubEvent, TicketType.ENTRY);
 		}
 
 	}
-	
-	
+
 	@Test
 	public void sellTicket_validation() {
 		final AdminService adminService = new AdminService();
@@ -145,7 +146,6 @@ public class AdminServiceTest {
 		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
 		adminService.sellTicket(clubEvent, TicketType.TABLES, 1);
 		adminService.sellTicket(clubEvent, TicketType.ENTRY);
-		
 
 	}
 }
