@@ -11,7 +11,7 @@ public class AdminService {
 	}
 	
 	public void addEvent(ClubEvent event) {
-		if (event.title == null) {
+		if (event.getTitle() == null) {
 			throw new RuntimeException("validation error: title must not be null!");
 		}
 		clubEvents.add(event);

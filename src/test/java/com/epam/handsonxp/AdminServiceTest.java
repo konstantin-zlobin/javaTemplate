@@ -1,22 +1,59 @@
 package com.epam.handsonxp;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.*;
 
 public class AdminServiceTest {
-	
+
 	@Test
 	public void addEvent_positive() {
 		final AdminService adminService = new AdminService();
-		final ClubEvent clubEvent = new ClubEvent();
-		clubEvent.title = "SuperMegaShow 12345";
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+
+		Date now = new Date();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), now, prices);
 		adminService.addEvent(clubEvent);
-		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents().get(0).title);
+		
+		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents().get(0).getTitle());
+		Assert.assertEquals(Arrays.asList("CoolArtist"), adminService.getAllEvents().get(0).getArtists());
+		Assert.assertEquals(now, adminService.getAllEvents().get(0).getDate());
+		Assert.assertEquals(prices, adminService.getAllEvents().get(0).getPrices());
 	}
-	
-	@Test(expected=RuntimeException.class)	
-	public void addEvent_validationError() {
+
+	@Test(expected = RuntimeException.class)
+	public void addEventTitleValidationError() {
+		testAddEvent(null, Collections.<String>emptyList(), new Date(), Collections.<TicketCategory, Double>emptyMap());
+	}
+
+	private void testAddEvent(String title, List<String> artists, Date date, Map<TicketCategory, Double> prices) {
 		final AdminService adminService = new AdminService();
-		final ClubEvent clubEvent = new ClubEvent();		
-		adminService.addEvent(clubEvent);			
+		final ClubEvent clubEvent = new ClubEvent(title, artists, date, prices);
+		adminService.addEvent(clubEvent);
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void addEventArtistsValidationError() {
+		testAddEvent("", null, new Date(), Collections.<TicketCategory,Double>emptyMap());
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void addEventDateValidationError() {
+		testAddEvent("", Collections.<String>emptyList(), null, Collections.<TicketCategory,Double>emptyMap());
+	}
+	@Test(expected = RuntimeException.class)
+	public void addEventPricesValidationError() {
+		testAddEvent("", Collections.<String>emptyList(), new Date(), null);
+	}
+	@Test(expected = RuntimeException.class)
+	public void addEventEmptyObjectsValidationError() {
+		testAddEvent("", Collections.<String>emptyList(), new Date(), Collections.<TicketCategory,Double>emptyMap());
 	}
 }
