@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,15 @@ public class ClubConcertEvent extends ClubEvent {
 		VIP, TABLE, STANDUP;
 	}
 
-	public ClubConcertEvent(Map<Category, Places> places) {
+	public ClubConcertEvent() {
 		super();
 		this.datetime.set(2000, Calendar.JANUARY, 1, 0, 0, 0);
 		this.datetime.set(Calendar.MILLISECOND, 0);
 		
-		this.places = places;
+		places = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
+		places.put(Category.VIP, new NumberedPlaces(10));
+		places.put(Category.TABLE, new NumberedPlaces(25));
+		places.put(Category.STANDUP, new UnnumberedPlaces(100));
 	}
 
 	/**

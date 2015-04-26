@@ -3,10 +3,9 @@ package com.epam.handsonxp;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.EnumMap;
-import java.util.Map;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.epam.handsonxp.ClubConcertEvent.Category;
 
@@ -31,7 +30,7 @@ public class AdminServiceTest {
 	@Test
 	public void addConcertEvent_positive() {
 		final AdminService adminService = new AdminService();
-		final ClubConcertEvent c = new ClubConcertEvent(null);
+		final ClubConcertEvent c = new ClubConcertEvent();
 		c.setTitle("SuperMegaShow 12345");
 		c.setDate(2015, Calendar.JUNE, 15);
 		c.setTime(19, 00);
@@ -58,47 +57,34 @@ public class AdminServiceTest {
 	@Test
 	public void sellTicket_positive() {
 		final AdminService adminService = new AdminService();
-		Places vipPlaces = new NumberedPlaces(3);
-		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
-		placesMap.put(Category.VIP, vipPlaces);
-		ClubConcertEvent event = new ClubConcertEvent(placesMap);
+		ClubConcertEvent event = new ClubConcertEvent();
 		adminService.sellTicket(event, Category.VIP, 1);		
 	}
 	
 	@Test
 	public void sellTicketUnnumberedPlacesCountSuccess() {
 		final AdminService adminService = new AdminService();
-		Places standupPlaces = new UnnumberedPlaces(3);
-		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
-		placesMap.put(Category.STANDUP, standupPlaces);
-		ClubConcertEvent event = new ClubConcertEvent(placesMap);
-		adminService.sellTicket(event, Category.STANDUP);
-		adminService.sellTicket(event, Category.STANDUP);
-		adminService.sellTicket(event, Category.STANDUP);
+		ClubConcertEvent event = new ClubConcertEvent();
+		for(int i = 0; i < 100; i++) {
+			adminService.sellTicket(event, Category.STANDUP);
+		}
 	
 	}
 	
 	@Test(expected = RuntimeException.class)
 	public void sellTicketUnnumberedPlacesCountError() {
 		final AdminService adminService = new AdminService();
-		Places standupPlaces = new UnnumberedPlaces(3);
-		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
-		placesMap.put(Category.STANDUP, standupPlaces);
-		ClubConcertEvent event = new ClubConcertEvent(placesMap);
-		adminService.sellTicket(event, Category.STANDUP);
-		adminService.sellTicket(event, Category.STANDUP);
-		adminService.sellTicket(event, Category.STANDUP);
-		adminService.sellTicket(event, Category.STANDUP);
+		ClubConcertEvent event = new ClubConcertEvent();
+		for(int i = 0; i < 101; i++) {
+			adminService.sellTicket(event, Category.STANDUP);
+		}
 	
 	}
 	
 	@Test(expected = RuntimeException.class)
 	public void sellTicketNumberedPlacesSameNumberError() {
 		final AdminService adminService = new AdminService();
-		Places standupPlaces = new NumberedPlaces(3);
-		Map<Category, Places> placesMap = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
-		placesMap.put(Category.VIP, standupPlaces);
-		ClubConcertEvent event = new ClubConcertEvent(placesMap);
+		ClubConcertEvent event = new ClubConcertEvent();
 		adminService.sellTicket(event, Category.VIP, 1);
 		adminService.sellTicket(event, Category.VIP, 1);
 	}
