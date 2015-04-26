@@ -111,8 +111,8 @@ public class ClubEvent {
 			return false;
 		}
 
-		buySeat(category, number);
-		return true;
+		
+		return buySeat(category, number);
 	}
 
 	public Boolean bookTicket(String string, TicketCategory category, int i) {
@@ -123,7 +123,7 @@ public class ClubEvent {
 		bookAttribute.name = string;
 
 		BookAttribute b = booksList.get(seat);
-		if (b == null || ((b.date.getTime() + 30 * 60 * 1000) > date.getTime())) {
+		if (b == null || ((b.date.getTime() + 30 * 60 * 1000) < date.getTime())) {
 			booksList.put(seat, bookAttribute);
 			return true;
 		}
