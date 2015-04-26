@@ -56,25 +56,36 @@ public class AdminService {
 		return clubEvents;
 	}
 
-	public void sellTicket(ClubEvent clubEvent, TicketType type, int num) {
+	public void sellTicket(ClubEvent clubEvent, TicketType type, int num, String family) {
 		Ticket ticket = new Ticket(clubEvent, type, num);
+		for (Ticket currentTicket : sellTickets) {
+			if (currentTicket.equals(ticket)) {
+				ticket = currentTicket;
+			}
+		}
+		
 		if (ticket.ticketType == TicketType.ENTRY) {
 			throw new WrongClubTicketException("validation error: entry");
 		}
-		if (sellTickets.contains(ticket)) {
+		if (sellTickets.contains(ticket) && ticket.sold) {
 			throw new WrongClubTicketException("validation error: alrady buy");
 		}
 		if ((num > type.max) && (num <= 0)) {
 			throw new WrongClubTicketException("validation error: this ticket number not exist");
 		}
 			
-		/*ticket.sold = true;
-		ticket.family =*/ 
+		ticket.sold = true;
+		ticket.family = family;
 		sellTickets.add(ticket);
 	}
 
-	public void sellTicket(ClubEvent clubEvent, TicketType type) {
+	public void sellTicket(ClubEvent clubEvent, TicketType type, String family) {
 		Ticket ticket = new Ticket(clubEvent, type, 0);
+		for (Ticket currentTicket : sellTickets) {
+			if (currentTicket.equals(ticket)) {
+				ticket = currentTicket;
+			}
+		}
 		if (ticket.ticketType != TicketType.ENTRY) {
 			throw new WrongClubTicketException("validation error: not Entry");
 
@@ -85,10 +96,11 @@ public class AdminService {
 			entryMapList.put(clubEvent, l);
 		}
 		if (l.size() >= type.max) {
-
 			throw new WrongClubTicketException("validation error: more than " + type.max);
 
 		}
+		ticket.sold = true;
+		ticket.family = family;
 		l.add(ticket);
 	}
 	

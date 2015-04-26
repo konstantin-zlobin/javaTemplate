@@ -90,8 +90,8 @@ public class AdminServiceTest {
 		clubEvent.artists = artists;
 		clubEvent.prices = prices;
 		adminService.addEvent(clubEvent);
-		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
-		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Ivanov");
 
 	}
 
@@ -117,7 +117,7 @@ public class AdminServiceTest {
 		clubEvent.prices = prices;
 		adminService.addEvent(clubEvent);
 		for (int i = 0; i < TicketType.ENTRY.max + 1; i++) {
-			adminService.sellTicket(clubEvent, TicketType.ENTRY);
+			adminService.sellTicket(clubEvent, TicketType.ENTRY, "Petrov");
 		}
 
 	}
@@ -128,9 +128,9 @@ public class AdminServiceTest {
 		ClubEvent clubEvent = createClubEvent();
 		adminService.addEvent(clubEvent);
 		
-		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
-		adminService.sellTicket(clubEvent, TicketType.TABLES, 1);
-		adminService.sellTicket(clubEvent, TicketType.ENTRY);
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");
+		adminService.sellTicket(clubEvent, TicketType.TABLES, 1, "Petrov");
+		adminService.sellTicket(clubEvent, TicketType.ENTRY, "Petrov");
 
 	}
 	
@@ -144,6 +144,15 @@ public class AdminServiceTest {
 		adminService.bookTicket(clubEvent, TicketType.ENTRY, "Petrov");
 	}
 
+	@Test
+	public void sellBoockedTicketSuccess() {
+		final AdminService adminService = new AdminService();
+		ClubEvent clubEvent = createClubEvent();
+		adminService.addEvent(clubEvent);
+		
+		adminService.bookTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");		
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");
+	}
 	
 	private ClubEvent createClubEvent() {
 		ClubEvent clubEvent = new ClubEvent();
