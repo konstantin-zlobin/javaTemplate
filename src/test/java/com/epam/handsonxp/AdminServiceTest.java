@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.*;
+import org.joda.time.DateTime;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class AdminServiceTest {
 
@@ -18,13 +19,13 @@ public class AdminServiceTest {
 		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
 		prices.put(TicketCategory.Common, 10.0);
 
-		Date now = new Date();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), now, prices);
+		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
 		adminService.addEvent(clubEvent);
 		
 		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents().get(0).getTitle());
 		Assert.assertEquals(Arrays.asList("CoolArtist"), adminService.getAllEvents().get(0).getArtists());
-		Assert.assertEquals(now, adminService.getAllEvents().get(0).getDate());
+		Assert.assertEquals(eventDate, adminService.getAllEvents().get(0).getDate());
 		Assert.assertEquals(prices, adminService.getAllEvents().get(0).getPrices());
 	}
 
@@ -55,5 +56,26 @@ public class AdminServiceTest {
 	@Test(expected = RuntimeException.class)
 	public void addEventEmptyObjectsValidationError() {
 		testAddEvent("", Collections.<String>emptyList(), new Date(), Collections.<TicketCategory,Double>emptyMap());
+	}
+	@Test(expected = RuntimeException.class)
+	public void addEventDateNowValidationError() {
+		final AdminService adminService = new AdminService();
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+
+		Date now = new Date();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), now, prices);
+		adminService.addEvent(clubEvent);
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void addEventDateInPastValidationError() {
+		final AdminService adminService = new AdminService();
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+
+		Date eventDate = new DateTime(2014, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
+		adminService.addEvent(clubEvent);
 	}
 }
