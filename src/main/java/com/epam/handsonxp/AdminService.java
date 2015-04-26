@@ -3,6 +3,8 @@ package com.epam.handsonxp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.epam.handsonxp.ClubConcertEvent.Category;
+
 public class AdminService {
 	private final List<ClubEvent> clubEvents;
 	
@@ -19,5 +21,13 @@ public class AdminService {
 	
 	public List<ClubEvent> getAllEvents() {
 		return clubEvents;
+	}
+	
+	public void sellTicket(ClubConcertEvent event, Category category, Integer number) {
+		event.sell(category, number);
+	}
+	
+	public void sellTicket(ClubConcertEvent event, Category category) {
+		sellTicket(event, category, null);
 	}
 }

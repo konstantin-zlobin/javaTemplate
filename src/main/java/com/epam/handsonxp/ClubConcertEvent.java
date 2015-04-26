@@ -13,15 +13,19 @@ public class ClubConcertEvent extends ClubEvent {
 	private final Calendar datetime = Calendar.getInstance();
 	private final List<String> actors = new ArrayList<>();
 	private final Map<Category, BigDecimal> prices = new HashMap<>();
+	private final Map<Category, Places> places;
+	
 
 	public static enum Category {
 		VIP, TABLE, STANDUP;
 	}
 
-	public ClubConcertEvent() {
+	public ClubConcertEvent(Map<Category, Places> places) {
 		super();
 		this.datetime.set(2000, Calendar.JANUARY, 1, 0, 0, 0);
 		this.datetime.set(Calendar.MILLISECOND, 0);
+		
+		this.places = places;
 	}
 
 	/**
@@ -115,6 +119,11 @@ public class ClubConcertEvent extends ClubEvent {
 	 */
 	public void setPrice(Category category, int price) {
 		setPrice(category, new BigDecimal(price));
+	}
+	
+	public void sell(Category category, Integer number) {
+		Places categoryPlaces = places.get(category);
+		categoryPlaces.sell(number);
 	}
 
 }
