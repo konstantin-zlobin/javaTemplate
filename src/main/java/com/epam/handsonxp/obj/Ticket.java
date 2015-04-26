@@ -1,10 +1,14 @@
 package com.epam.handsonxp.obj;
 
+import java.util.Date;
+
 public class Ticket {
 	public ClubEvent ce;
 	public TicketType ticketType;
 	public int num;
-	
+	public boolean sold;
+	public Date bookedDate;
+	public String family;	
 	
 	
 	public Ticket(ClubEvent ce, TicketType ticketType, int num) {

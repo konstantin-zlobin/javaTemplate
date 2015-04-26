@@ -125,8 +125,29 @@ public class AdminServiceTest {
 	@Test
 	public void sellTicket_validation() {
 		final AdminService adminService = new AdminService();
-		final ClubEvent clubEvent = new ClubEvent();
+		ClubEvent clubEvent = createClubEvent();
+		adminService.addEvent(clubEvent);
+		
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
+		adminService.sellTicket(clubEvent, TicketType.TABLES, 1);
+		adminService.sellTicket(clubEvent, TicketType.ENTRY);
 
+	}
+	
+	@Test
+	public void bookTest_ok() {
+		final AdminService adminService = new AdminService();
+		ClubEvent clubEvent = createClubEvent();
+		adminService.addEvent(clubEvent);
+		
+		adminService.bookTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");		
+		adminService.bookTicket(clubEvent, TicketType.ENTRY, "Petrov");
+	}
+
+	
+	private ClubEvent createClubEvent() {
+		ClubEvent clubEvent = new ClubEvent();
+		
 		List<String> artists = new ArrayList<String>();
 		artists.add("Shira");
 		Map<TicketType, Integer> prices = new HashMap<>();
@@ -142,10 +163,7 @@ public class AdminServiceTest {
 		clubEvent.artists = artists;
 		clubEvent.prices = prices;
 		clubEvent.date = calendar.getTime();
-		adminService.addEvent(clubEvent);
-		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1);
-		adminService.sellTicket(clubEvent, TicketType.TABLES, 1);
-		adminService.sellTicket(clubEvent, TicketType.ENTRY);
-
+		
+		return clubEvent;
 	}
 }
