@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ClubConcertEvent extends ClubEvent {
 	private final List<String> actors = new ArrayList<>();
 	private final Map<Category, BigDecimal> prices = new HashMap<>();
 	private final Map<Category, Places> places;
-	
+	private final BookExpireMap bookMap;
 
 	public static enum Category {
 		VIP, TABLE, STANDUP;
@@ -25,6 +26,7 @@ public class ClubConcertEvent extends ClubEvent {
 		super();
 		this.datetime.set(2000, Calendar.JANUARY, 1, 0, 0, 0);
 		this.datetime.set(Calendar.MILLISECOND, 0);
+		this.bookMap = new BookExpireMap();
 		
 		places = new EnumMap<ClubConcertEvent.Category, Places>(Category.class);
 		places.put(Category.VIP, new NumberedPlaces(10));
@@ -129,5 +131,20 @@ public class ClubConcertEvent extends ClubEvent {
 		Places categoryPlaces = places.get(category);
 		categoryPlaces.sell(number);
 	}
+	
+	public void bookTicket(Ticket ticket) {
+		ticket.setBookTime(new Date());
+		String key = ticket.getCard().getCardNumber() + ticket.getBookTime().toString();
+		bookMap.put(key, ticket);
+	}
 
+	public void buyTicket(String cardNum, String date) {
+		Ticket ticket = (Ticket) bookMap.get(cardNum + date);
+		
+		ticket.setBookTime(new Date());
+		String key = ticket.getCard().getCardNumber() + ticket.getBookTime().toString();
+		bookMap.put(key, ticket);
+	}
+
+	
 }

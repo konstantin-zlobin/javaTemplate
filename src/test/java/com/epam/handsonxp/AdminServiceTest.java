@@ -88,5 +88,13 @@ public class AdminServiceTest {
 		adminService.sellTicket(event, Category.VIP, 1);
 		adminService.sellTicket(event, Category.VIP, 1);
 	}
+	
+/*	@Test(expected = RuntimeException.class)
+	public void sellTicketNumberedPlacesSameNumberError() {
+		final AdminService adminService = new AdminService();
+		ClubConcertEvent event = new ClubConcertEvent();
+		adminService.sellTicket(event, Category.VIP, 1);
+		adminService.sellTicket(event, Category.VIP, 1);
+	}*/
 }
 
