@@ -21,28 +21,21 @@ public class AdminServiceTest {
 		prices.put(TicketCategory.Common, 10.0);
 
 		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
-				Arrays.asList("CoolArtist"), eventDate, prices);
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
 		adminService.addEvent(clubEvent);
 
-		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents()
-				.get(0).getTitle());
-		Assert.assertEquals(Arrays.asList("CoolArtist"), adminService
-				.getAllEvents().get(0).getArtists());
-		Assert.assertEquals(eventDate, adminService.getAllEvents().get(0)
-				.getDate());
-		Assert.assertEquals(prices, adminService.getAllEvents().get(0)
-				.getPrices());
+		Assert.assertEquals("SuperMegaShow 12345", adminService.getAllEvents().get(0).getTitle());
+		Assert.assertEquals(Arrays.asList("CoolArtist"), adminService.getAllEvents().get(0).getArtists());
+		Assert.assertEquals(eventDate, adminService.getAllEvents().get(0).getDate());
+		Assert.assertEquals(prices, adminService.getAllEvents().get(0).getPrices());
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void addEventTitleValidationError() {
-		testAddEvent(null, Collections.<String> emptyList(), new Date(),
-				Collections.<TicketCategory, Double> emptyMap());
+		testAddEvent(null, Collections.<String> emptyList(), new Date(), Collections.<TicketCategory, Double> emptyMap());
 	}
 
-	private void testAddEvent(String title, List<String> artists, Date date,
-			Map<TicketCategory, Double> prices) {
+	private void testAddEvent(String title, List<String> artists, Date date, Map<TicketCategory, Double> prices) {
 		final AdminService adminService = new AdminService();
 		final ClubEvent clubEvent = new ClubEvent(title, artists, date, prices);
 		adminService.addEvent(clubEvent);
@@ -50,14 +43,12 @@ public class AdminServiceTest {
 
 	@Test(expected = RuntimeException.class)
 	public void addEventArtistsValidationError() {
-		testAddEvent("", null, new Date(),
-				Collections.<TicketCategory, Double> emptyMap());
+		testAddEvent("", null, new Date(), Collections.<TicketCategory, Double> emptyMap());
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void addEventDateValidationError() {
-		testAddEvent("", Collections.<String> emptyList(), null,
-				Collections.<TicketCategory, Double> emptyMap());
+		testAddEvent("", Collections.<String> emptyList(), null, Collections.<TicketCategory, Double> emptyMap());
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -67,8 +58,7 @@ public class AdminServiceTest {
 
 	@Test(expected = RuntimeException.class)
 	public void addEventEmptyObjectsValidationError() {
-		testAddEvent("", Collections.<String> emptyList(), new Date(),
-				Collections.<TicketCategory, Double> emptyMap());
+		testAddEvent("", Collections.<String> emptyList(), new Date(), Collections.<TicketCategory, Double> emptyMap());
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -78,8 +68,7 @@ public class AdminServiceTest {
 		prices.put(TicketCategory.Common, 10.0);
 
 		Date now = new Date();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
-				Arrays.asList("CoolArtist"), now, prices);
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), now, prices);
 		adminService.addEvent(clubEvent);
 	}
 
@@ -90,19 +79,18 @@ public class AdminServiceTest {
 		prices.put(TicketCategory.Common, 10.0);
 
 		Date eventDate = new DateTime(2014, 6, 5, 10, 30).toDate();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
-				Arrays.asList("CoolArtist"), eventDate, prices);
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
 		adminService.addEvent(clubEvent);
 	}
-	
+
 	@Test
-    public void getAllFreeSeats() {
+	public void getAllFreeSeats() {
 		ArrayList<Seat> seats = new ArrayList<Seat>();
-		
+
 		for (int i = 0; i < TicketCategory.VIP.getSeatsCount(); i++) {
 			seats.add(new Seat(i, TicketCategory.VIP));
 			if ((i % 2) == 0) {
-				 seats.get(i).takeSeat();
+				seats.get(i).takeSeat();
 			}
 		}
 		for (Seat seat : seats) {
@@ -114,36 +102,58 @@ public class AdminServiceTest {
 			}
 		}
 	}
-	
-	@Test(expected = RuntimeException.class)
+
+	@Test
 	public void canBuyVipSeat() {
 		final AdminService adminService = new AdminService();
 		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
 		prices.put(TicketCategory.Common, 10.0);
-		Date eventDate = new DateTime(2014, 6, 5, 10, 30).toDate();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
-				Arrays.asList("CoolArtist"), eventDate, prices);
+		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
 		adminService.addEvent(clubEvent);
-		
-		Assert.assertEquals(true, clubEvent.buySeat(TicketCategory.VIP, 1));		
-		
+
+		Assert.assertEquals(true, clubEvent.buySeat(TicketCategory.VIP, 1));
+
 	}
-	
+
 	@Test(expected = RuntimeException.class)
 	public void cantBuyMoreThanHundredSeats() {
 		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
 		prices.put(TicketCategory.Common, 10.0);
 		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
-		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
-				Arrays.asList("CoolArtist"), eventDate, prices);
-		ArrayList<Seat> seats = new ArrayList<Seat>();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
 		for (int i = 0; i < TicketCategory.Simple.getSeatsCount(); i++) {
-			Seat newBookedSeat = new Seat(i, TicketCategory.Simple);
-			newBookedSeat.takeSeat();
-			seats.add(newBookedSeat);			
+			clubEvent.buySeat(TicketCategory.Simple, i);
 		}
-		Assert.assertNotNull(seats.get(100)); // all the seats created correctly
+		Assert.assertEquals(TicketCategory.Simple.getSeatsCount(), clubEvent.seats.size()); // all the seats created
+																							// correctly
 		clubEvent.buySeat(TicketCategory.Simple, 101);
-		
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void cantBuySameVipSeat() {
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
+		for (int i = 0; i < TicketCategory.VIP.getSeatsCount(); i++) {
+			clubEvent.buySeat(TicketCategory.VIP, i);
+		}
+		clubEvent.buySeat(TicketCategory.VIP, 1);
+	}
+
+	@Test
+	public void canBuyTicket() {
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+
+		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345", Arrays.asList("CoolArtist"), eventDate, prices);
+		clubEvent.buySeat(TicketCategory.VIP, 1);
+
+		Assert.assertFalse(clubEvent.bookTicket("vladimir smirnov", TicketCategory.VIP, 1));
+		Assert.assertTrue(clubEvent.bookTicket("vladimir smirnov", TicketCategory.VIP, 2));
+		Assert.assertFalse(clubEvent.bookTicket("oleg burshinov", TicketCategory.VIP, 2));
+		clubEvent.buySeat("vladimir smirnov", TicketCategory.VIP, 1);
 	}
 }
