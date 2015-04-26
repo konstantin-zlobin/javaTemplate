@@ -70,6 +70,9 @@ public class AdminService {
 		if (sellTickets.contains(ticket) && ticket.sold) {
 			throw new WrongClubTicketException("validation error: alrady buy");
 		}
+		if (sellTickets.contains(ticket) && !ticket.family.equals(family) && !ticket.sold) {
+			throw new WrongClubTicketException("validation error: alrady booked");
+		}
 		if ((num > type.max) && (num <= 0)) {
 			throw new WrongClubTicketException("validation error: this ticket number not exist");
 		}

@@ -154,6 +154,16 @@ public class AdminServiceTest {
 		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");
 	}
 	
+	@Test(expected = WrongClubTicketException.class)
+	public void sellBoockedTicketFalse() {
+		final AdminService adminService = new AdminService();
+		ClubEvent clubEvent = createClubEvent();
+		adminService.addEvent(clubEvent);
+		
+		adminService.bookTicket(clubEvent, TicketType.VIP_TABLES, 1, "Petrov");		
+		adminService.sellTicket(clubEvent, TicketType.VIP_TABLES, 1, "Ivanov");
+	}
+	
 	private ClubEvent createClubEvent() {
 		ClubEvent clubEvent = new ClubEvent();
 		
