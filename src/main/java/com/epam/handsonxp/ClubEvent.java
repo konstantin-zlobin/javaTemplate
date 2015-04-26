@@ -1,5 +1,15 @@
 package com.epam.handsonxp;
 
 public class ClubEvent {
-	public String title;	
+	private String title;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}	
+	
+	
 }
