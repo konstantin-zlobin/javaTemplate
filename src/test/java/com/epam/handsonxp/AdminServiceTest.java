@@ -128,4 +128,22 @@ public class AdminServiceTest {
 		Assert.assertEquals(true, clubEvent.buySeat(TicketCategory.VIP, 1));		
 		
 	}
+	
+	@Test(expected = RuntimeException.class)
+	public void cantBuyMoreThanHundredSeats() {
+		Map<TicketCategory, Double> prices = new EnumMap<>(TicketCategory.class);
+		prices.put(TicketCategory.Common, 10.0);
+		Date eventDate = new DateTime(2015, 6, 5, 10, 30).toDate();
+		final ClubEvent clubEvent = new ClubEvent("SuperMegaShow 12345",
+				Arrays.asList("CoolArtist"), eventDate, prices);
+		ArrayList<Seat> seats = new ArrayList<Seat>();
+		for (int i = 0; i < TicketCategory.Simple.getSeatsCount(); i++) {
+			Seat newBookedSeat = new Seat(i, TicketCategory.Simple);
+			newBookedSeat.takeSeat();
+			seats.add(newBookedSeat);			
+		}
+		Assert.assertNotNull(seats.get(100)); // all the seats created correctly
+		clubEvent.buySeat(TicketCategory.Simple, 101);
+		
+	}
 }
